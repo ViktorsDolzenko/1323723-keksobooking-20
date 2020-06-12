@@ -1,5 +1,5 @@
 'use strict';
-var ALL_TITLES = ['Заголовок', 'Заголовок', 'Заголовок', 'Заголовок', 'Заголовок', 'Заголовок', 'Заголовок', 'Заголовок'];
+
 var MAX_PRICE = 100000;
 var PLACE_TYPE = ['flat', 'bungalo', 'house', 'palace'];
 var CHECK_IN = ['12:00', '13;00', '14:00'];
@@ -30,7 +30,7 @@ var randomInteger = function (min, max) {
 
 var createObjects = function (quantity) {
   var announcementsObj = [];
-  for (var i = 0; i < quantity; i++) {
+  for (var i = 1; i <= quantity; i++) {
     var xPos = randomInteger(0, 1200);
     var yPos = randomInteger(130, 630);
     announcementsObj.push({
@@ -38,10 +38,10 @@ var createObjects = function (quantity) {
         avatar: 'img/avatars/user0' + (i + 1) + '.png'
       },
       offers: {
-        title: ALL_TITLES[i],
+        title: 'Заголовок',
         type: getRandomArrayElement(PLACE_TYPE),
         price: randomInteger(0, MAX_PRICE),
-        rooms: randomInteger(0, 5),
+        rooms: randomInteger(1, 5),
         guests: randomInteger(1, 10),
         checkin: getRandomArrayElement(CHECK_IN),
         checkout: getRandomArrayElement(CHECK_OUT),
@@ -62,8 +62,9 @@ var renderPins = function (pins) {
   var pinsElement = pinTemplate.cloneNode(true);
   pinsElement.style.left = pins.location.x - (PIN_WIDTH / 2) + 'px';
   pinsElement.style.top = pins.location.y - PIN_HEIGHT + 'px';
-  pinsElement.querySelector('img').src = pins.author.avatar;
-  pinsElement.querySelector('img').alt = pins.offers.title;
+  var getPin = pinsElement.querySelector('img');
+  getPin.src = pins.author.avatar;
+  getPin.alt = pins.offers.title;
   return pinsElement;
 };
 
