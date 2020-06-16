@@ -1,19 +1,7 @@
 'use strict';
 
 var MAX_PRICE = 5000;
-var PLACE_TYPE = [{
-  type: 'Дворец',
-},
-{
-  type: 'Квартира',
-},
-{
-  type: 'Дом',
-},
-{
-  type: 'Бунгало'
-}
-];
+var PLACE_TYPE = ['flat', 'bungalo', 'house', 'palace'];
 var CHECK_IN = ['12:00', '13:00', '14:00'];
 var CHECK_OUT = ['12:00', '13:00', '14:00'];
 var ALL_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -22,6 +10,12 @@ var ALL_DESCRIPTIONS = ['хата на курьих ножках', 'красив
 var QUANTITY_OF_ANNOUNCEMENTS = 8;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var placesTypes = {
+  flat: 'Квартира',
+  bungalo: 'Бунгало',
+  palace: 'Дворец',
+  house: 'Дом'
+};
 var bookingMap = document.querySelector('.map');
 var pinTemplate = document.querySelector('#pin').content.querySelector('button');
 var mapPins = document.querySelector('.map__pins');
@@ -57,7 +51,7 @@ var createObjects = function (quantity) {
       },
       offers: {
         title: 'Заголовок ' + i,
-        type: getRandomArrayElement(PLACE_TYPE).type,
+        type: getRandomArrayElement(PLACE_TYPE),
         address: xPos + ', ' + yPos,
         price: randomInteger(0, MAX_PRICE),
         rooms: randomInteger(1, 5),
@@ -91,18 +85,26 @@ var renderCards = function (cards) {
   var cardsElement = mapCard.cloneNode(true);
   cardsElement.querySelector('.popup__title').textContent = cards.offers.title;
   cardsElement.querySelector('.popup__text--address').textContent = cards.offers.address;
-  cardsElement.querySelector('.popup__text--price').textContent = cards.offers.price;
-  cardsElement.querySelector('.popup__type').textContent = cards.offers.type;
+  var cardPrice = cardsElement.querySelector('.popup__text--price');
+  cardPrice.textContent = cards.offers.price;
+  cardPrice.innerHTML += ' &#x20bd;<span>/ночь</span>';
+  cardsElement.querySelector('.popup__type').textContent = placesTypes[cards.offers.type];
   cardsElement.querySelector('.popup__text--capacity').textContent = cards.offers.rooms + ' Комнаты для ' + cards.offers.guests + ' Гостей';
   cardsElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + cards.offers.checkin + ' выезд до ' + cards.offers.checkout;
   cardsElement.querySelector('.popup__avatar').src = cards.author.avatar;
   cardsElement.querySelector('.popup__description').textContent = cards.offers.descriptions;
 
-  var popupFeature = cardsElement.querySelector('.popup__features');
-  var popupFeatures = cardsElement.querySelectorAll('.popup__feature');
-  for (var i = popupFeatures.length - 1; i >= cards.offers.features.length; i--) {
-    popupFeature.removeChild(popupFeatures[i]);
+  var featuresFragment = document.createDocumentFragment();
+  var featuresList = cardsElement.querySelector('.popup__features');
+
+  for (var i = 0; i < cards.offers.features.length; i++) {
+    var element = document.createElement('li');
+    element.classList.add('popup__feature');
+    element.classList.add('popup__feature--' + cards.offers.features[i]);
+    featuresFragment.appendChild(element);
   }
+  featuresList.innerHTML = '';
+  featuresList.appendChild(featuresFragment);
 
   var popupPhotos = cardsElement.querySelector('.popup__photos');
   var popupPhoto = popupPhotos.querySelector('.popup__photo');
@@ -113,7 +115,6 @@ var renderCards = function (cards) {
       popupPhotos.appendChild(newPhoto);
       newPhoto.src = item;
     });
-
   }
 
   bookingMap.insertBefore(cardsElement, filterContainer);
