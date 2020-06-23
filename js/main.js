@@ -1,4 +1,5 @@
 'use strict';
+
 var MAX_PRICE = 10000;
 var PLACE_TYPE = ['flat', 'bungalo', 'house', 'palace'];
 var CHECK_IN = ['12:00', '13:00', '14:00'];
@@ -36,20 +37,31 @@ var address = formEnable.querySelector('#address');
 var capacity = formEnable.querySelector('#capacity');
 var roomNumber = formEnable.querySelector('#room_number');
 var submitButton = document.querySelector('.ad-form__submit');
+
 var init = function () {
   addressLocation();
   disabled();
 };
-var activationHandler = function (evt) {
-  if (evt.which === 1 || evt.key === 'Enter') {
+var activationHandlerClick = function (evt) {
+  if (evt.which === 1) {
     activation();
-    activationButton.removeEventListener('keydown', activationHandler);
-    activationButton.removeEventListener('mousedown', activationHandler);
+    removeActivationListeners();
+  }
+};
+var activationHandlerKey = function (evt) {
+  if (evt.key === 'Enter') {
+    activation();
+    removeActivationListeners();
   }
 };
 
-activationButton.addEventListener('mousedown', activationHandler);
-activationButton.addEventListener('keydown', activationHandler);
+activationButton.addEventListener('mousedown', activationHandlerClick);
+activationButton.addEventListener('keydown', activationHandlerKey);
+
+var removeActivationListeners = function () {
+  activationButton.removeEventListener('mousedown', activationHandlerClick);
+  activationButton.removeEventListener('keydown', activationHandlerKey);
+};
 
 var activation = function () {
   bookingMap.classList.remove('map--faded');
@@ -74,7 +86,7 @@ var position = function () {
     top = activationButton.offsetTop + activationButton.offsetHeight;
     left = activationButton.offsetLeft + activationButton.offsetWidth / 2;
   }
-  return [top, left];
+  return [Math.floor(top), Math.floor(left)];
 };
 
 var addressLocation = function () {
@@ -90,8 +102,8 @@ var disabled = function () {
       disableForm[i].removeAttribute('disabled');
     }
   }
-
 };
+
 submitButton.addEventListener('click', function () {
   if (+roomNumber.value < +capacity.value || +roomNumber.value === 100 || +capacity.value === 0) {
     capacity.setCustomValidity('Гостям слишком тесно, выберите другое количество комнат.');
@@ -154,7 +166,7 @@ var renderPins = function (pins) {
   getPin.alt = pins.offers.title;
   return pinsElement;
 };
-
+/* eslint-disable no-unused-vars */
 var renderCards = function (cards) {
   var cardsElement = mapCard.cloneNode(true);
   cardsElement.querySelector('.popup__title').textContent = cards.offers.title;
@@ -193,7 +205,7 @@ var renderCards = function (cards) {
 
   bookingMap.insertBefore(cardsElement, filterContainer);
 };
-
+/* eslint-enable no-unused-vars */
 var addPins = function (quantity) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < quantity.length; i++) {
