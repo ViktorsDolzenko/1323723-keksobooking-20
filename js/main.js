@@ -36,12 +36,23 @@ var price = formEnable.querySelector('#price');
 var address = formEnable.querySelector('#address');
 var capacity = formEnable.querySelector('#capacity');
 var roomNumber = formEnable.querySelector('#room_number');
-var submitButton = document.querySelector('.ad-form__submit');
+var submitButton = formEnable.querySelector('.ad-form__submit');
+var timein = formEnable.querySelector('#timein');
+var timeout = formEnable.querySelector('#timeout');
 
-var init = function () {
+var onInit = function () {
   addressLocation();
   disabled();
 };
+
+timein.addEventListener('change', function (evt) {
+  timeout.value = evt.target.value;
+});
+
+timeout.addEventListener('change', function (evt) {
+  timein.value = evt.target.value;
+});
+
 var activationHandlerClick = function (evt) {
   if (evt.which === 1) {
     activation();
@@ -163,10 +174,29 @@ var renderPins = function (pins) {
   pinsElement.style.top = pins.location.y - PIN_HEIGHT + 'px';
   var getPin = pinsElement.querySelector('img');
   getPin.src = pins.author.avatar;
-  getPin.alt = pins.offers.title;
+
+  pinsElement.addEventListener('click', function () {
+    onCardClickClose();
+    renderCards(pins);
+  });
+
   return pinsElement;
 };
-/* eslint-disable no-unused-vars */
+
+var onCardClickClose = function () {
+  var cardPopup = document.querySelector('.popup');
+  if (cardPopup) {
+    cardPopup.remove();
+  }
+  document.removeEventListener('keydown', onCardKeyDownClose);
+};
+
+var onCardKeyDownClose = function (evt) {
+  if (evt.key === 'Escape') {
+    onCardClickClose();
+  }
+};
+
 var renderCards = function (cards) {
   var cardsElement = mapCard.cloneNode(true);
   cardsElement.querySelector('.popup__title').textContent = cards.offers.title;
@@ -202,10 +232,14 @@ var renderCards = function (cards) {
       newPhoto.src = item;
     });
   }
-
+  var cardCloseButton = cardsElement.querySelector('.popup__close');
   bookingMap.insertBefore(cardsElement, filterContainer);
+
+
+  cardCloseButton.addEventListener('click', onCardClickClose);
+  document.addEventListener('keydown', onCardKeyDownClose);
 };
-/* eslint-enable no-unused-vars */
+
 var addPins = function (quantity) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < quantity.length; i++) {
@@ -213,4 +247,4 @@ var addPins = function (quantity) {
   }
   mapPins.appendChild(fragment);
 };
-init();
+onInit();
