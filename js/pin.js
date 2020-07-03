@@ -3,7 +3,7 @@
   var QUANTITY_OF_ANNOUNCEMENTS = 8;
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
-  var PIN_ANGLE = 22;
+  var PIN_ANGLE = 20;
 
 
   var bookingMap = document.querySelector('.map');
@@ -67,18 +67,19 @@
     mapPins.appendChild(fragment);
   };
 
-  var position = function () {
+  var position = function (top, left) {
     if (!bookingMap.classList.contains('map--faded')) {
-      var top = mainPin.offsetTop + mainPin.offsetHeight + PIN_ANGLE;
-      var left = mainPin.offsetLeft + mainPin.offsetWidth / 2;
+      top = mainPin.offsetTop + mainPin.offsetHeight + PIN_ANGLE;
+      left = mainPin.offsetLeft + mainPin.offsetWidth / 2;
     } else {
-      top = activationButton.offsetTop + activationButton.offsetHeight;
-      left = activationButton.offsetLeft + mainPin.offsetWidth / 2;
+      top = mainPin.offsetTop + mainPin.offsetHeight;
+      left = mainPin.offsetLeft + mainPin.offsetWidth / 2;
     }
-    return [Math.floor(top), Math.floor(left)];
+    return [Math.ceil(top), Math.ceil(left)];
   };
 
   window.pin = {
     position: position,
+    PIN_ANGLE: PIN_ANGLE,
   };
 })();
