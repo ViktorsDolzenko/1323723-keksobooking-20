@@ -1,10 +1,9 @@
 'use strict';
 (function () {
-  var QUANTITY_OF_ANNOUNCEMENTS = 8;
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
   var PIN_ANGLE = 20;
-
+  var pins = [];
 
   var bookingMap = document.querySelector('.map');
   var pinTemplate = document.querySelector('#pin').content.querySelector('button');
@@ -37,32 +36,31 @@
   var activation = function () {
     bookingMap.classList.remove('map--faded');
     formEnable.classList.remove('ad-form--disabled');
-    var quantity = window.card.createObjects(QUANTITY_OF_ANNOUNCEMENTS);
-    addPins(quantity);
+    addPins();
     window.form.addressLocation();
     window.form.disabled();
   };
 
-  var renderPins = function (pins) {
+  var renderPins = function (pin) {
     var pinsElement = pinTemplate.cloneNode(true);
-    pinsElement.style.left = pins.location.x - (PIN_WIDTH / 2) + 'px';
-    pinsElement.style.top = pins.location.y - PIN_HEIGHT + 'px';
+    pinsElement.style.left = pin.location.x - (PIN_WIDTH / 2) + 'px';
+    pinsElement.style.top = pin.location.y - PIN_HEIGHT + 'px';
     var getPin = pinsElement.querySelector('img');
-    getPin.src = pins.author.avatar;
+    getPin.src = pin.author.avatar;
 
     pinsElement.addEventListener('click', function () {
       window.card.onCardClickClose();
-      window.card.renderCards(pins);
+      window.card.renderCards(pin);
     });
 
     return pinsElement;
   };
 
 
-  var addPins = function (quantity) {
+  var addPins = function () {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < quantity.length; i++) {
-      fragment.appendChild(renderPins(quantity[i]));
+    for (var i = 0; i < pins.length; i++) {
+      fragment.appendChild(renderPins(pins[i]));
     }
     mapPins.appendChild(fragment);
   };
@@ -78,8 +76,19 @@
     return [Math.ceil(top), Math.ceil(left)];
   };
 
+
+  var onSuccess = function (response) {
+    pins = response;
+  };
+
+  var requestPins = function () {
+    window.backend.load(onSuccess);
+  };
+
   window.pin = {
     position: position,
     PIN_ANGLE: PIN_ANGLE,
+    addPins: addPins,
+    requestPins: requestPins,
   };
 })();
