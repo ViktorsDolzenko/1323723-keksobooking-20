@@ -16,7 +16,6 @@
       mainPin.style.top = Math.max(130, Math.min(630, pinY)) - pinRect.height - window.pin.PIN_ANGLE + 'px';
       mainPin.style.left = Math.max(0, Math.min(1200, pinX)) - pinRect.width / 2 + 'px';
       window.form.addressLocation();
-
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();

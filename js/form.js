@@ -17,10 +17,9 @@
   var addressLocation = function () {
     address.value = window.pin.position();
   };
+
   window.form = {
     disabled: disabled,
     addressLocation: addressLocation,
   };
-
 })();
-
