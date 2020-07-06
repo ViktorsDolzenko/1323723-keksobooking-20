@@ -2,7 +2,7 @@
 (function () {
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
-  var PIN_ANGLE = 20;
+  var PIN_ANGLE = 15;
   var pins = [];
 
   var bookingMap = document.querySelector('.map');
@@ -90,5 +90,7 @@
     PIN_ANGLE: PIN_ANGLE,
     addPins: addPins,
     requestPins: requestPins,
+    activationHandlerClick: activationHandlerClick,
+    activationHandlerKey: activationHandlerKey,
   };
 })();
