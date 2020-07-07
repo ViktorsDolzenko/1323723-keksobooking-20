@@ -11,6 +11,10 @@
   var filterContainer = bookingMap.querySelector('.map__filters-container');
   var mapCard = document.querySelector('#card').content.
   querySelector('.map__card');
+  var mapPins = document.querySelector('.map__pins');
+  var activationButton = mapPins.querySelector('.map__pin');
+  var resetButton = document.querySelector('.ad-form__reset');
+  var main = document.querySelector('main');
 
   var onCardClickClose = function () {
     var cardPopup = document.querySelector('.popup');
@@ -77,21 +81,48 @@
 
   var onPostSuccess = function () {
     window.form.disabled();
-    var successMessage = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
-    formEnable.appendChild(successMessage);
-    successMessage.addEventListener('click', function () {
-      successMessage.remove();
-    });
+    main.appendChild(window.messages.successMessage);
+    window.messages.successMessage.addEventListener('click', window.messages.onClickCloseSuccessMessage);
+    document.addEventListener('keydown', window.messages.onKeydownCloseSuccessMessage);
+  };
+
+  var onPostError = function () {
+    window.form.disabled();
+    main.appendChild(window.messages.errorMessage);
+    window.messages.errorButton.addEventListener('click', window.messages.onClickCloseErrorMessage);
+    document.addEventListener('keydown', window.messages.onKeydownCloseErrorMessage);
   };
 
   formEnable.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(formEnable), onPostSuccess);
+    window.backend.upload(new FormData(formEnable), onPostSuccess, onPostError);
     evt.preventDefault();
   });
 
+  var removePins = function () {
+    var createdpins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    createdpins.forEach(function (item) {
+      item.remove();
+    });
+  };
+
+  var pageReset = function () {
+    bookingMap.classList.add('map--faded');
+    formEnable.classList.add('ad-form--disabled');
+    onCardClickClose();
+    formEnable.reset();
+    removePins();
+    activationButton.addEventListener('mousedown', window.pin.activationHandlerClick);
+    activationButton.addEventListener('keydown', window.pin.activationHandlerKey);
+  };
+
+  resetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    pageReset();
+  });
 
   window.card = {
     onCardClickClose: onCardClickClose,
     renderCards: renderCards,
+    pageReset: pageReset,
   };
 })();
