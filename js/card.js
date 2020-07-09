@@ -98,19 +98,14 @@
     evt.preventDefault();
   });
 
-  var removePins = function () {
-    var createdpins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    createdpins.forEach(function (item) {
-      item.remove();
-    });
-  };
 
   var pageReset = function () {
     bookingMap.classList.add('map--faded');
     formEnable.classList.add('ad-form--disabled');
     onCardClickClose();
     formEnable.reset();
-    removePins();
+    window.form.disabled();
+    window.pin.removePins();
     activationButton.addEventListener('mousedown', window.pin.activationHandlerClick);
     activationButton.addEventListener('keydown', window.pin.activationHandlerKey);
   };
