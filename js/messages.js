@@ -5,8 +5,10 @@
   var errorButton = errorMessage.querySelector('.error__button');
   var onClickCloseSuccessMessage = function (evt) {
     if (evt.which === 1) {
-      successMessage.remove();
-      window.card.pageReset();
+      if (evt.target === evt.currentTarget) {
+        successMessage.remove();
+        window.card.pageReset();
+      }
     }
   };
   var onKeydownCloseSuccessMessage = function (evt) {

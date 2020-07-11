@@ -11,6 +11,7 @@
   var activationButton = mapPins.querySelector('.map__pin');
   var mainPin = document.querySelector('.map__pin--main');
   var formEnable = document.querySelector('.ad-form');
+  var filterForm = document.querySelector('.map__filters');
 
   var activationHandlerClick = function (evt) {
     if (evt.which === 1) {
@@ -58,12 +59,15 @@
 
 
   var addPins = function () {
+    var pinsForDraw = window.filter.filterPins(pins);
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pins.length; i++) {
-      fragment.appendChild(renderPins(pins[i]));
+    for (var i = 0; i < pinsForDraw.length; i++) {
+      fragment.appendChild(renderPins(pinsForDraw[i]));
     }
+    removePins();
     mapPins.appendChild(fragment);
   };
+
 
   var position = function (top, left) {
     if (!bookingMap.classList.contains('map--faded')) {
@@ -85,12 +89,21 @@
     window.backend.load(onSuccess);
   };
 
+  var removePins = function () {
+    var createdpins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    createdpins.forEach(function (item) {
+      item.remove();
+    });
+  };
+
+  filterForm.addEventListener('change', addPins);
+
   window.pin = {
     position: position,
     PIN_ANGLE: PIN_ANGLE,
-    addPins: addPins,
     requestPins: requestPins,
     activationHandlerClick: activationHandlerClick,
     activationHandlerKey: activationHandlerKey,
+    removePins: removePins
   };
 })();
