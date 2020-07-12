@@ -96,7 +96,10 @@
     });
   };
 
-  filterForm.addEventListener('change', addPins);
+
+  var addPinsDebounce = window.debounce(addPins, 500);
+
+  filterForm.addEventListener('change', addPinsDebounce);
 
   window.pin = {
     position: position,
