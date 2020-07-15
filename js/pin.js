@@ -61,9 +61,9 @@
   var addPins = function () {
     var pinsForDraw = window.filter.filterPins(pins);
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pinsForDraw.length; i++) {
-      fragment.appendChild(renderPins(pinsForDraw[i]));
-    }
+    pinsForDraw.forEach(function (item) {
+      fragment.appendChild(renderPins(item));
+    });
     removePins();
     mapPins.appendChild(fragment);
   };
@@ -97,9 +97,7 @@
   };
 
 
-  var addPinsDebounce = window.debounce(addPins, 500);
-
-  filterForm.addEventListener('change', addPinsDebounce);
+  filterForm.addEventListener('change', window.debounce(addPins, 500));
 
   window.pin = {
     position: position,

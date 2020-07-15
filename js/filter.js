@@ -11,7 +11,7 @@
   var priceRange = {
     'low': {
       from: 0,
-      to: 9999
+      to: 10000
     },
     'middle': {
       from: 10000,
@@ -28,8 +28,9 @@
   };
 
   var filterHousingPrice = function (pin) {
+    var priceRangeValue = priceRange[housingPrice.value];
     return housingPrice.value === 'any' ||
-      pin.offer.price >= priceRange[housingPrice.value].from && pin.offer.price <= priceRange[housingPrice.value].to;
+      pin.offer.price >= priceRangeValue.from && pin.offer.price < priceRangeValue.to;
   };
 
   var filterHousingRoom = function (pin) {

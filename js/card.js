@@ -47,12 +47,12 @@
     var featuresFragment = document.createDocumentFragment();
     var featuresList = cardsElement.querySelector('.popup__features');
     if (cards.offer.features.length > 0) {
-      for (var i = 0; i < cards.offer.features.length; i++) {
+      cards.offer.features.forEach(function (item) {
         var element = document.createElement('li');
         element.classList.add('popup__feature');
-        element.classList.add('popup__feature--' + cards.offer.features[i]);
+        element.classList.add('popup__feature--' + item);
         featuresFragment.appendChild(element);
-      }
+      });
       featuresList.innerHTML = '';
       featuresList.appendChild(featuresFragment);
     } else {
