@@ -6,13 +6,13 @@
 
   var disabled = function () {
     var disableForm = formEnable.querySelectorAll('fieldset');
-    for (var i = 0; i < disableForm.length; i++) {
+    disableForm.forEach(function (item) {
       if (bookingMap.classList.contains('map--faded')) {
-        disableForm[i].setAttribute('disabled', true);
+        item.setAttribute('disabled', true);
       } else {
-        disableForm[i].removeAttribute('disabled');
+        item.removeAttribute('disabled');
       }
-    }
+    });
   };
   var addressLocation = function () {
     address.value = window.pin.position();

@@ -8,6 +8,7 @@
       if (evt.target === evt.currentTarget) {
         successMessage.remove();
         window.card.pageReset();
+        removeKeydownMessageListeners();
       }
     }
   };
@@ -15,23 +16,31 @@
     if (evt.key === 'Escape') {
       successMessage.remove();
       window.card.pageReset();
+      removeKeydownMessageListeners();
     }
   };
 
   var onClickCloseErrorMessage = function (evt) {
     if (evt.which === 1) {
-      errorMessage.remove();
-      window.card.pageReset();
+      if (evt.target === evt.currentTarget) {
+        errorMessage.remove();
+        removeKeydownMessageListeners();
+      }
     }
   };
+
 
   var onKeydownCloseErrorMessage = function (evt) {
     if (evt.key === 'Escape') {
       errorMessage.remove();
-      window.card.pageReset();
+      removeKeydownMessageListeners();
     }
   };
 
+  var removeKeydownMessageListeners = function () {
+    document.removeEventListener('keydown', onKeydownCloseSuccessMessage);
+    document.removeEventListener('keydown', onKeydownCloseErrorMessage);
+  };
   window.messages = {
     successMessage: successMessage,
     errorMessage: errorMessage,

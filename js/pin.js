@@ -13,25 +13,26 @@
   var formEnable = document.querySelector('.ad-form');
   var filterForm = document.querySelector('.map__filters');
 
-  var activationHandlerClick = function (evt) {
+  var activationOnClick = function (evt) {
     if (evt.which === 1) {
       activation();
       removeActivationListeners();
     }
   };
-  var activationHandlerKey = function (evt) {
+  var activationOnKey = function (evt) {
     if (evt.key === 'Enter') {
       activation();
       removeActivationListeners();
     }
   };
 
-  activationButton.addEventListener('mousedown', activationHandlerClick);
-  activationButton.addEventListener('keydown', activationHandlerKey);
+
+  activationButton.addEventListener('mousedown', activationOnClick);
+  activationButton.addEventListener('keydown', activationOnKey);
 
   var removeActivationListeners = function () {
-    activationButton.removeEventListener('mousedown', activationHandlerClick);
-    activationButton.removeEventListener('keydown', activationHandlerKey);
+    activationButton.removeEventListener('mousedown', activationOnClick);
+    activationButton.removeEventListener('keydown', activationOnKey);
   };
 
   var activation = function () {
@@ -40,6 +41,8 @@
     addPins();
     window.form.addressLocation();
     window.form.disabled();
+    window.filter.disableSelects(window.filter.servicesSelects);
+    window.filter.disableSelects(window.filter.servicesFeatures);
   };
 
   var renderPins = function (pin) {
@@ -49,9 +52,10 @@
     var getPin = pinsElement.querySelector('img');
     getPin.src = pin.author.avatar;
 
-    pinsElement.addEventListener('click', function () {
-      window.card.onCardClickClose();
-      window.card.renderCards(pin);
+    pinsElement.addEventListener('click', function (evt) {
+      window.card.onSheetClickClose();
+      window.card.renderSheets(pin);
+      evt.currentTarget.classList.add('map__pin--active');
     });
 
     return pinsElement;
@@ -59,11 +63,11 @@
 
 
   var addPins = function () {
-    var pinsForDraw = window.filter.filterPins(pins);
+    var pinsForDraw = window.filter.pins(pins);
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pinsForDraw.length; i++) {
-      fragment.appendChild(renderPins(pinsForDraw[i]));
-    }
+    pinsForDraw.forEach(function (item) {
+      fragment.appendChild(renderPins(item));
+    });
     removePins();
     mapPins.appendChild(fragment);
   };
@@ -97,16 +101,14 @@
   };
 
 
-  var addPinsDebounce = window.debounce(addPins, 500);
-
-  filterForm.addEventListener('change', addPinsDebounce);
+  filterForm.addEventListener('change', window.debounce(addPins, 500));
 
   window.pin = {
     position: position,
-    PIN_ANGLE: PIN_ANGLE,
-    requestPins: requestPins,
-    activationHandlerClick: activationHandlerClick,
-    activationHandlerKey: activationHandlerKey,
-    removePins: removePins
+    angle: PIN_ANGLE,
+    request: requestPins,
+    activationOnClick: activationOnClick,
+    activationOnKey: activationOnKey,
+    remove: removePins
   };
 })();

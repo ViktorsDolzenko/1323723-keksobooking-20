@@ -7,6 +7,7 @@
   };
   var StatusCode = {
     OK: 200,
+    DISCONNECTED: 500,
   };
 
   var createRequest = function (onSuccess, onError) {
@@ -21,7 +22,9 @@
       }
     });
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      if (xhr.status === StatusCode.DISCONNECTED) {
+        onError('Произошла ошибка соединения');
+      }
     });
 
     xhr.addEventListener('timeout', function () {

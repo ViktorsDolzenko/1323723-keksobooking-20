@@ -3,10 +3,12 @@
   var onInit = function () {
     window.form.disabled();
     window.form.addressLocation();
-    window.pin.requestPins();
+    window.pin.request();
+    window.filter.disableSelects(window.filter.servicesSelects);
+    window.filter.disableSelects(window.filter.servicesFeatures);
   };
 
-  window.onload = function () {
+  window.addEventListener('load', function () {
     onInit();
-  };
+  });
 })();

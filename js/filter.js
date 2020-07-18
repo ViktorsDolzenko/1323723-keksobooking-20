@@ -7,11 +7,25 @@
   var housingRoom = filterForm.querySelector('#housing-rooms');
   var housingGuests = filterForm.querySelector('#housing-guests');
   var featuresContainer = filterForm.querySelector('.map__features');
+  var bookingMap = document.querySelector('.map');
+  var filterSelects = filterForm.querySelectorAll('select');
+  var filterFeatures = filterForm.querySelectorAll('fieldset');
+
+  var disableSelects = function (classSelector) {
+    classSelector.forEach(function (item) {
+      if (bookingMap.classList.contains('map--faded')) {
+        item.setAttribute('disabled', true);
+      } else {
+        item.removeAttribute('disabled');
+      }
+    });
+  };
+
 
   var priceRange = {
     'low': {
       from: 0,
-      to: 9999
+      to: 10000
     },
     'middle': {
       from: 10000,
@@ -28,8 +42,9 @@
   };
 
   var filterHousingPrice = function (pin) {
+    var priceRangeValue = priceRange[housingPrice.value];
     return housingPrice.value === 'any' ||
-      pin.offer.price >= priceRange[housingPrice.value].from && pin.offer.price <= priceRange[housingPrice.value].to;
+      pin.offer.price >= priceRangeValue.from && pin.offer.price < priceRangeValue.to;
   };
 
   var filterHousingRoom = function (pin) {
@@ -68,12 +83,16 @@
         newPins.push(pin);
       }
       i++;
-      window.card.onCardClickClose();
+      window.card.onSheetClickClose();
     }
     return newPins;
   };
 
   window.filter = {
-    filterPins: filterPins,
+    pins: filterPins,
+    disableSelects: disableSelects,
+    servicesSelects: filterSelects,
+    servicesFeatures: filterFeatures,
+    servicesForm: filterForm,
   };
 })();
