@@ -7,6 +7,20 @@
   var housingRoom = filterForm.querySelector('#housing-rooms');
   var housingGuests = filterForm.querySelector('#housing-guests');
   var featuresContainer = filterForm.querySelector('.map__features');
+  var bookingMap = document.querySelector('.map');
+  var filterSelects = filterForm.querySelectorAll('select');
+  var filterFeatures = filterForm.querySelectorAll('fieldset');
+
+  var disableSelects = function (classSelector) {
+    classSelector.forEach(function (item) {
+      if (bookingMap.classList.contains('map--faded')) {
+        item.setAttribute('disabled', true);
+      } else {
+        item.removeAttribute('disabled');
+      }
+    });
+  };
+
 
   var priceRange = {
     'low': {
@@ -69,12 +83,16 @@
         newPins.push(pin);
       }
       i++;
-      window.card.onCardClickClose();
+      window.card.onSheetClickClose();
     }
     return newPins;
   };
 
   window.filter = {
-    filterPins: filterPins,
+    pins: filterPins,
+    disableSelects: disableSelects,
+    servicesSelects: filterSelects,
+    servicesFeatures: filterFeatures,
+    servicesForm: filterForm,
   };
 })();
